@@ -22,11 +22,12 @@ services:
     ports:
       - 8104:8104
     volumes:
-      - ./xnat/plugins:${XNAT_HOME}/plugins
-      - ./xnat-data/home/logs:${XNAT_HOME}/logs
-      - ./xnat-data/archive:${XNAT_ROOT}/archive
-      - ./xnat-data/build:${XNAT_ROOT}/build
-      - ./xnat-data/cache:${XNAT_ROOT}/cache
+      - /data/cbscentral02.rc.fas.harvard.edu/plugins:${XNAT_HOME}/plugins
+      - /data/cbscentral02.rc.fas.harvard.edu/home/logs:${XNAT_HOME}/logs
+      - /data/cbscentral02.rc.fas.harvard.edu/archive:${XNAT_ROOT}/archive
+      - /data/cbscentral02.rc.fas.harvard.edu/prearchive:${XNAT_ROOT}/prearchive
+      - /data/cbscentral02.rc.fas.harvard.edu/build:${XNAT_ROOT}/build
+      - /data/cbscentral02.rc.fas.harvard.edu/cache:${XNAT_ROOT}/cache
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - xnat-db
@@ -53,10 +54,14 @@ services:
     image: nginx:${NGINX_VERSION}
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/logs:/var/log/nginx
     ports:
       - "80:80"
+      - "443:443"
     expose:
       - "80"
+      - "443"
     depends_on:
       - xnat-web
     links:

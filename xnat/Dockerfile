@@ -1,6 +1,11 @@
 FROM tomcat:9-jdk8-openjdk-buster
 MAINTAINER Matt Kelsey <kelseym@wustl.edu>
 
+ENV http_proxy=http://rcproxy.rc.fas.harvard.edu:3128
+ENV https_proxy=http://rcproxy.rc.fas.harvard.edu:3128
+
+ARG TOMCAT_UID=5147
+ARG TOMCAT_GID=5014
 ARG XNAT_VERSION=${XNAT_VERSION}
 ARG XNAT_ROOT=${XNAT_ROOT}
 ARG XNAT_HOME=${XNAT_HOME}
@@ -46,6 +51,12 @@ RUN rm -f /tmp/xnat-web-${XNAT_VERSION}.war
 EXPOSE 8080
 
 ENV XNAT_HOME=${XNAT_HOME} XNAT_DATASOURCE_USERNAME=${XNAT_DATASOURCE_USERNAME} PGPASSWORD=${XNAT_DATASOURCE_PASSWORD}
+
+RUN groupadd --gid ${TOMCAT_GID} servicegroup && \
+    adduser --shell /bin/false --disabled-password --uid ${TOMCAT_UID} serviceuser && \
+    usermod -a -G ${TOMCAT_GID} -g ${TOMCAT_GID} serviceuser
+RUN chown -R serviceuser:servicegroup ${XNAT_HOME}
+USER serviceuser
 
 CMD ["wait-for-postgres.sh", "/usr/local/tomcat/bin/catalina.sh", "run"]
 
