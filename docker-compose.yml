@@ -25,6 +25,7 @@ services:
     volumes:
       - /data/cbscentral02.rc.fas.harvard.edu/plugins:${XNAT_HOME}/plugins
       - /data/cbscentral02.rc.fas.harvard.edu/home/logs:${XNAT_HOME}/logs
+      - /data/cbscentral02.rc.fas.harvard.edu/home/work:${XNAT_HOME}/work
       - /data/cbscentral02.rc.fas.harvard.edu/archive:${XNAT_ROOT}/archive
       - /data/cbscentral02.rc.fas.harvard.edu/prearchive:${XNAT_ROOT}/prearchive
       - /data/cbscentral02.rc.fas.harvard.edu/build:${XNAT_ROOT}/build
@@ -37,6 +38,7 @@ services:
       - XNAT_HOME=${XNAT_HOME}
 
   xnat-db:
+    user: 5147:5014
     image: postgres:${PG_VERSION}
     expose:
       - "5432"
