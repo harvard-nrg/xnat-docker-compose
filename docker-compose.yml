@@ -38,7 +38,6 @@ services:
       - XNAT_HOME=${XNAT_HOME}
 
   xnat-db:
-    user: 5147:5014
     image: postgres:${PG_VERSION}
     expose:
       - "5432"
