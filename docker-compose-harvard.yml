@@ -1,0 +1,19 @@
+services:
+
+  xnat-web:
+    user: ${TOMCAT_UID}:${TOMCAT_GID}
+    volumes:
+      - ./xnat-data:/usr/local/NRG/xnat
+      - ./xnat-data/home/work:${XNAT_HOME}/work
+      - ./xnat-data/prearchive:${XNAT_ROOT}/prearchive
+      - ./xnat/themes:/usr/local/tomcat/webapps/ROOT/themes
+
+  xnat-nginx:
+    volumes:
+      - ./nginx/xnat.conf:/etc/nginx/nginx.conf
+      - ./nginx/logs:/var/log/nginx
+      - ${SSL_CERT}:/etc/pki/tls/certs/xnat.crt
+      - ${SSL_KEY}:/etc/pki/tls/private/xnat.key
+    ports:
+      - 443:443
+    restart: unless-stopped
